@@ -51,6 +51,7 @@ public class Main {
 			
 			if(x+1<n && y+1<n && map[x+1][y] != 1 && map[x][y+1] != 1 && map[x+1][y+1] != 1) {
 				dfs(x+1,y+1,3);
+				
 			}
 		} else {
 			if(y+1 < n && map[x][y+1] != 1) {
