@@ -55,13 +55,13 @@ public class Main {
 			
 			//가지치기
 			if(v.break_wall_count >= result) {
-				continue;
+				continue; 
 			}
 			
 			//도착 시 최솟값 확인
 			if(v.x == n-1 && v.y == n-1) {
 				result = Math.min(result, v.break_wall_count);
-				break;
+				break; 
 			}	
 			
 			for(int i=0; i<4; i++) {
