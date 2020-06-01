@@ -65,6 +65,7 @@ public class Main2 {
 	static void dfs(point start, point end, int count, int dir) {
 		if(visited[start.x][start.y] && start.x == end.x && start.y == end.y) {
 			result = Math.max(result, count);
+			return;
 		}
 		
 		if(visited[start.x][start.y] || valueVisited[map[start.x][start.y]]) {

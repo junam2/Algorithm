@@ -13,6 +13,7 @@ public class Main {
 	static int[] dy = {-1,1,1,-1,0};
 	static int n,test;
 	static int[][] map;
+	static boolean[][] visited;
 	static boolean[] valueVisited;
 	static int result;
 	static int tmp_result;
@@ -37,6 +38,7 @@ public class Main {
 			n = Integer.parseInt(st.nextToken());
 			
 			map = new int[n][n];
+			visited = new boolean[n][n];
 			result = Integer.MIN_VALUE;
 			valueVisited = new boolean[101];
 			
@@ -51,7 +53,7 @@ public class Main {
 				for(int j=0; j<n; j++) {
 					Set<Integer> set = new HashSet<Integer>();
 					set.add(map[i][j]);
-					dfs(new edge(i,j), new edge(i,j), map[i][j], 0, set, 1);
+					dfs(new edge(i,j), new edge(i,j), 0, 0);
 				}
 			}
 			
@@ -63,57 +65,35 @@ public class Main {
 		}
 	}
 	
-	static void dfs(edge start, edge end, int value, int dir, Set<Integer> set, int count) {
-		if(dir == 4) {
+	static void dfs(edge start, edge end, int dir, int count) {
+		if(visited[start.x][start.y] && start.x == end.x && start.y == end.y) {
+			result = Math.max(result, count);
 			return;
 		}
 		
-		if(value != map[start.x][start.y] && start.x == end.x && start.y == end.y) {
-			result = Math.max(result, value);
-			return;
-		}
+		if(visited[start.x][start.y] || valueVisited[map[start.x][start.y]]) return;
+		
+		visited[start.x][start.y] = true;
+		valueVisited[map[start.x][start.y]] = true;
 		
 		int nx = start.x + dx[dir];
 		int ny = start.y + dy[dir];
 		
-		if(nx == end.x && ny == end.y) {
-			result = Math.max(result, count);
-			return;
+		if(nx>=0 && nx<n && ny>=0 && ny<n) {
+			dfs(new edge(nx,ny), end, dir, count+1);
 		}
 		
-		if(nx>=0 && nx<n && ny>=0 && ny<n && !set.contains(map[nx][ny])) {
-			Iterator<Integer> it = set.iterator();
-			Set<Integer> tmp = new HashSet<Integer>();
+		if(dir+1 != 4) {
+			int nx2 = start.x + dx[dir+1];
+			int ny2 = start.y + dy[dir+1];
 			
-			while(it.hasNext()) {
-				tmp.add(it.next());
+			if(count>0 && nx2>=0 && nx2<n && ny2>=0 && ny2<n) {
+				dfs(new edge(nx2,ny2), end, dir+1,count+1);
 			}
-			
-			tmp.add(map[nx][ny]);
-			
-			dfs(new edge(nx,ny), end, value+map[nx][ny], dir, tmp, count+1);
 		}
 		
-		int nx2 = start.x + dx[dir+1];
-		int ny2 = start.y + dy[dir+1];
-		
-		if(nx2 == end.x && ny2 == end.y) {
-			result = Math.max(result, count);
-			return;
-		}
-		
-		if(count>0 && nx2>=0 && nx2<n && ny2>=0 && ny2<n && !set.contains(map[nx2][ny2])) {
-			Iterator<Integer> it = set.iterator();
-			Set<Integer> tmp = new HashSet<Integer>();
-			
-			while(it.hasNext()) {
-				tmp.add(it.next());
-			}
-			
-			tmp.add(map[nx2][ny2]);
-			
-			dfs(new edge(nx2,ny2), end, value+map[nx2][ny2], dir+1, tmp, count+1);
-		}
+		visited[start.x][start.y] = false;
+		valueVisited[map[start.x][start.y]] = false;
 	}
 	
 }
